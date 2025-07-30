@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Previsão de Risco</title>
+</head>
+<body>
+  <h1>Formulário de Previsão</h1>
+  <form id="formulario">
+    <label>Angina de Esforço (0 = Não, 1 = Sim): <input type="number" name="angina_esforco" required></label><br><br>
+    
+    <label>Tipo de Dor no Peito (0 = ASY, 1 = ATA, 2 = NAP, 3 = TA): <input type="number" name="tipo_dor_peito" required></label><br><br>
+    
+    <label>Inclinação ST (0 = Down, 1 = Flat, 2 = Up): <input type="number" name="inclinacao_st" required></label><br><br>
+    
+    <label>Sexo (0 = Feminino, 1 = Masculino): <input type="number" name="sexo" required></label><br><br>
+    
+    <label>Glicemia em Jejum (0 = Alto, 1 = Normal): <input type="number" name="glicemia_jejum" required></label><br><br>
+    
+    <label>Frequência Cardíaca Máxima: <input type="number" name="fc_maxima" required step="0.1"></label><br><br>
+    
+    <label>Depressão ST: <input type="number" name="depressao_st" required step="0.1"></label><br><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <h2>Resultado:</h2>
+  <div id="resultado">Preencha os campos e clique em "Enviar".</div>
+
+  <script>
+    document.getElementById('formulario').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const dados = {};
+
+      formData.forEach((valor, chave) => {
+        dados[chave] = parseFloat(valor);  // converte todos para número
+      });
+
+      try {
+        const resposta = await fetch('/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dados)
+        });
+
+        const json = await resposta.json();
+        document.getElementById('resultado').innerText =
+          json.previsao !== undefined
+            ? `Previsão: ${json.previsao}`
+            : `Erro: ${json.erro}`;
+      } catch (erro) {
+        document.getElementById('resultado').innerText = 'Erro na requisição: ' + erro.message;
+      }
+    });
+  </script>
+</body>
+</html>
