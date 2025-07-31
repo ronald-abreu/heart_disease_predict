@@ -24,46 +24,46 @@ form.addEventListener('submit', async function (e) {
     });
 
     const json = await response.json();
+    console.log(json.previsao);
 
     resultDiv.style.opacity = 1;
     resultDiv.style.transform = 'translateY(0)';
     resultDiv.className = "";
     resultDiv.style.animation = 'pop 0.4s ease';
 
-    if (json.prediction !== undefined) {
+    if (json.previsao !== undefined) {
       let text = "";
       let icon = "";
-      let sound = null;
-
-      if (json.prediction >= 0.7) {
-        text = "High risk of heart problem";
+      
+      if (json.previsao >= 1) {
+        text = "Alto risco de problema no coração";
         icon = '<i class="fas fa-times-circle"></i>';
         resultDiv.classList.add('negative');
-        sound = document.getElementById('sound-negative');
-      } else if (json.prediction >= 0.4) {
-        text = "Moderate risk, attention recommended";
+        
+      } else if (json.previsao >= 0.4) {
+        text = "Risco moderado, atenção recomendada";
         icon = '<i class="fas fa-exclamation-triangle"></i>';
         resultDiv.classList.add('moderate');
-        sound = document.getElementById('sound-moderate');
+        
       } else {
-        text = "Low risk, keep taking care!";
+        text = "Baixo risco de problema! Mantenha assim";
         icon = '<i class="fas fa-check-circle"></i>';
         resultDiv.classList.add('positive');
-        sound = document.getElementById('sound-positive');
+        
       }
 
       resultDiv.innerHTML = icon + "<div>" + text + "</div>";
-      sound.play();
+    
     } else {
       resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> Erro: ' + json.error;
       resultDiv.classList.add('negative');
-      document.getElementById('sound-negative').play();
+     
     }
   } catch (error) {
     resultDiv.style.opacity = 1;
     resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> Erro de request: ' + error.message;
     resultDiv.classList.add('negative');
-    document.getElementById('sound-negative').play();
+    
   } finally {
     submitBtn.disabled = false;
     submitBtn.innerHTML = '<span>Submit</span>';
