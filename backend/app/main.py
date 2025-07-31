@@ -13,7 +13,7 @@ columns = joblib.load("app/models/columns.pkl")
 app = FastAPI()
 
 # Serve arquivos estáticos do frontend
-app.mount("/static", StaticFiles(directory="../frontend"), name="static")
+app.mount("/static", StaticFiles(directory="../frontend/static"), name="static")
 
 # Serve o index.html como página inicial
 @app.get("/")

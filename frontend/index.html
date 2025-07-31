@@ -1,60 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Previsão de Risco</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="icon" type="image/png" href="/static/images/heart.png">
 </head>
 <body>
-  <h1>Formulário de Previsão</h1>
-  <form id="formulario">
-    <label>Angina de Esforço (0 = Não, 1 = Sim): <input type="number" name="angina_esforco" required></label><br><br>
-    
-    <label>Tipo de Dor no Peito (0 = ASY, 1 = ATA, 2 = NAP, 3 = TA): <input type="number" name="tipo_dor_peito" required></label><br><br>
-    
-    <label>Inclinação ST (0 = Down, 1 = Flat, 2 = Up): <input type="number" name="inclinacao_st" required></label><br><br>
-    
-    <label>Sexo (0 = Feminino, 1 = Masculino): <input type="number" name="sexo" required></label><br><br>
-    
-    <label>Glicemia em Jejum (0 = Alto, 1 = Normal): <input type="number" name="glicemia_jejum" required></label><br><br>
-    
-    <label>Frequência Cardíaca Máxima: <input type="number" name="fc_maxima" required step="0.1"></label><br><br>
-    
-    <label>Depressão ST: <input type="number" name="depressao_st" required step="0.1"></label><br><br>
+  <div class="background-gif" aria-hidden="true"></div>
 
-    <button type="submit">Enviar</button>
+  <img src="/static/images/heart.png" class="top-img" alt="Coração" />
+  <h1>Previsão de Risco</h1>
+
+  <form id="form">
+    <label>Angina de Esforço:
+      <div class="input-group">
+        <i class="fas fa-walking"></i>
+        <select name="exertional_angina" required>
+          <option value="" disabled selected>Selecione</option>
+          <option value="0">Não</option>
+          <option value="1">Sim</option>
+        </select>
+      </div>
+    </label>
+    
+    <label>Tipo de Dor no Peito:
+      <div class="input-group">
+        <i class="fas fa-heartbeat"></i>
+        <select name="chest_pain_type" required>
+          <option value="" disabled selected>Selecione</option>
+          <option value="0">ASY (Assintomático)</option>
+          <option value="1">ATA (Angina Típica)</option>
+          <option value="2">NAP (Dor Não-Anginosa)</option>
+          <option value="3">TA (Angina Atípica)</option>
+        </select>
+      </div>
+    </label>
+    
+    <label>Inclinação ST:
+      <div class="input-group">
+        <i class="fas fa-chart-line"></i>
+        <select name="st_slope" required>
+          <option value="" disabled selected>Selecione</option>
+          <option value="0">Descendente</option>
+          <option value="1">Plana</option>
+          <option value="2">Ascendente</option>
+        </select>
+      </div>
+    </label>
+    
+    <label>Sexo:
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <select name="gender" required>
+          <option value="" disabled selected>Selecione</option>
+          <option value="0">Feminino</option>
+          <option value="1">Masculino</option>
+        </select>
+      </div>
+    </label>
+    
+    <label>Glicemia em Jejum:
+      <div class="input-group">
+        <i class="fas fa-candy-cane"></i>
+        <select name="fasting_blood_sugar" required>
+          <option value="" disabled selected>Selecione</option>
+          <option value="0">Alta</option>
+          <option value="1">Normal</option>
+        </select>
+      </div>
+    </label>
+    
+    <label>Frequência Cardíaca Máxima:
+      <div class="input-group">
+        <i class="fas fa-heart"></i>
+        <input type="number" name="max_heart_rate" required step="0.1" />
+      </div>
+    </label>
+    
+    <label>Depressão ST:
+      <div class="input-group">
+        <i class="fas fa-wave-square"></i>
+        <input type="number" name="st_depression" required step="0.1" />
+      </div>
+    </label>
+
+    <button type="submit" id="submitBtn"><span>Enviar</span></button>
   </form>
 
   <h2>Resultado:</h2>
-  <div id="resultado">Preencha os campos e clique em "Enviar".</div>
-
-  <script>
-    document.getElementById('formulario').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const dados = {};
-
-      formData.forEach((valor, chave) => {
-        dados[chave] = parseFloat(valor);  // converte todos para número
-      });
-
-      try {
-        const resposta = await fetch('/predict', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(dados)
-        });
-
-        const json = await resposta.json();
-        document.getElementById('resultado').innerText =
-          json.previsao !== undefined
-            ? `Previsão: ${json.previsao}`
-            : `Erro: ${json.erro}`;
-      } catch (erro) {
-        document.getElementById('resultado').innerText = 'Erro na requisição: ' + erro.message;
-      }
-    });
-  </script>
+  <div id="result">Preencha os campos e clique em "Enviar".</div>
+  <script src="/static/js/script.js"></script>
 </body>
 </html>
